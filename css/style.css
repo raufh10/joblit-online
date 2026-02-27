@@ -26,9 +26,9 @@ h1 span {
 
 .search-container {
     display: flex;
-    justify-content: center;
+    justify-content: center; /* This centers the search bar horizontally */
     max-width: 600px;
-    margin: 0 auto;
+    margin: 0 auto; /* This centers the entire container within the header */
     box-shadow: 0 4px 20px rgba(0,0,0,0.3);
     border-radius: 8px;
     overflow: hidden;
