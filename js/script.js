@@ -35,7 +35,7 @@ async function fetchJobData() {
     resultsArea.innerHTML = `<p class="placeholder">Loading Joblit opportunities...</p>`;
 
     try {
-        const response = await fetch(`${CONFIG.BASE_URL}/role?limit=${CONFIG.LIMIT}&offset=${currentOffset}`, {
+        const response = await fetch(`${CONFIG.BASE_URL}/matcher/role?limit=${CONFIG.LIMIT}&offset=${currentOffset}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 
