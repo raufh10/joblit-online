@@ -22,17 +22,18 @@ const searchBtn = document.getElementById('searchBtn');
 
 /**
  * 1. Initialize: Fetch real skills from the DB
+ * Path adjusted to /matcher/skills
  */
 async function loadSkillVocabulary() {
   try {
-    const response = await fetch(`${CONFIG.BASE_URL}/skills`);
+    const response = await fetch(`${CONFIG.BASE_URL}/matcher/skills`);
     const data = await response.json();
     SKILL_ENUMS = data.skills || [];
     console.log(`✅ Loaded ${SKILL_ENUMS.length} skills from Joblit engine.`);
   } catch (err) {
     console.error("❌ Failed to load skills from API:", err);
     // Fallback constants if API is unreachable
-    SKILL_ENUMS = ["Python", "SQL", "Machine Learning", "Data Engineering"];
+    SKILL_ENUMS = ["Python", "SQL", "Machine Learning", "Data Engineering", "Rust", "PostgreSQL"];
   }
 }
 
@@ -42,7 +43,7 @@ async function loadSkillVocabulary() {
 skillInput.addEventListener('input', (e) => {
   const val = e.target.value.toLowerCase().trim();
   suggestionsBox.innerHTML = '';
-  
+
   if (val.length < 1) {
     suggestionsBox.style.display = 'none';
     return;
@@ -51,7 +52,7 @@ skillInput.addEventListener('input', (e) => {
   // Filter existing skills that aren't already selected
   const matches = SKILL_ENUMS.filter(s => 
     s.toLowerCase().includes(val) && !selectedSkills.has(s)
-  ).slice(0, 8); // Limit to top 8 suggestions for UI clarity
+  ).slice(0, 8); 
 
   if (matches.length > 0) {
     matches.forEach(match => {
@@ -67,6 +68,18 @@ skillInput.addEventListener('input', (e) => {
   }
 });
 
+// Added: Press Enter to add skill if it matches a suggestion
+skillInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    const val = skillInput.value.toLowerCase().trim();
+    const match = SKILL_ENUMS.find(s => s.toLowerCase() === val);
+    if (match && !selectedSkills.has(match)) {
+      addSkill(match);
+    }
+  }
+});
+
 /**
  * 3. Tag Management
  */
@@ -77,10 +90,11 @@ function addSkill(skill) {
   renderTags();
 }
 
-function removeSkill(skill) {
+// Global scope for onclick removal
+window.removeSkill = function(skill) {
   selectedSkills.delete(skill);
   renderTags();
-}
+};
 
 function renderTags() {
   tagContainer.innerHTML = '';
@@ -104,6 +118,7 @@ document.addEventListener('click', (e) => {
 
 /**
  * 4. Search Execution
+ * Path adjusted to /matcher/match
  */
 searchBtn.addEventListener('click', async () => {
   if (selectedSkills.size === 0) {
@@ -118,7 +133,7 @@ searchBtn.addEventListener('click', async () => {
   `;
 
   try {
-    const response = await fetch(`${CONFIG.BASE_URL}/match?limit=${CONFIG.LIMIT}`, {
+    const response = await fetch(`${CONFIG.BASE_URL}/matcher/match?limit=${CONFIG.LIMIT}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ 
@@ -154,25 +169,31 @@ function renderResults(jobs, terms) {
     return;
   }
 
+  // Visual confirmation of identifying standardized skills
   let html = `
     <div style="text-align:center; margin-bottom:30px; font-size: 0.9rem; color: #666;">
-      Matching based on: <strong>${terms.join(', ')}</strong>
+      Semantic Match: <strong>${terms.join(', ')}</strong>
     </div>
   `;
-  
+
   jobs.forEach(job => {
+    // Fallback for null values found in API logs
+    const company = job.company_name || 'Hiring Company';
+    const location = job.location || 'Remote / Flexible';
+    const postDate = job.date ? new Date(job.date).toLocaleDateString() : 'Recent';
+
     html += `
       <div class="job-card">
         <h3>${job.title}</h3>
         <div class="job-meta">
-          <strong>🏢 ${job.company_name}</strong><br>
-          📍 ${job.location || 'Remote'} | 📅 ${job.date ? new Date(job.date).toLocaleDateString() : 'Recent'}
+          <strong>🏢 ${company}</strong><br>
+          📍 ${location} | 📅 ${postDate}
         </div>
         <a href="${job.url}" target="_blank" class="view-btn">View Opportunity</a>
       </div>
     `;
   });
-  
+
   resultsArea.innerHTML = html;
   resultsArea.scrollIntoView({ behavior: 'smooth' });
 }
