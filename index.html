@@ -1,26 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Joblit | Pave a Way for Your Career in Data</title>
-    <link rel="stylesheet" href="./css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Joblit | Pave Your Career in Data</title>
+  <link rel="stylesheet" href="./css/style.css">
 </head>
 <body>
-
-    <header>
-        <h1>Job<span>lit</span></h1>
-        <div class="search-container">
-            <input type="text" id="jobSearch" placeholder="Search jobs, titles, or roles...">
-            <button id="searchBtn">Search</button>
+  <header>
+    <h1>Job<span>lit</span></h1>
+    <p>Select your top skills to find your perfect match.</p>
+    
+    <div class="form-container">
+      <div class="skill-input-wrapper">
+        <input type="text" id="skillInput" placeholder="Type a skill (e.g. Python, AWS)..." autocomplete="off">
+        <div id="suggestions" class="suggestions-box"></div>
+      </div>
+      <div id="selectedSkills" class="tag-container">
         </div>
-    </header>
+      <button id="searchBtn">Match My Career</button>
+    </div>
+  </header>
 
-    <main id="results">
-        <p class="placeholder">Enter a keyword to start searching.</p>
-    </main>
+  <main id="results">
+    <p class="placeholder">Your tailored job matches will appear here.</p>
+  </main>
 
-    <script src="./js/script.js"></script>
+  <script src="./js/script.js"></script>
 </body>
 </html>
-
