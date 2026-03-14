@@ -7,6 +7,14 @@ You can view the live site here: [https://raufh10.github.io/joblit-online/](http
 
 ---
 
+## 📚 Overview
+Joblit goes beyond keyword matching. It performs deep-dive analysis for the following core roles:
+* **Data Analyst**
+* **Data Engineer**
+* **Data Scientist**
+* **ML Engineer**
+* **AI Engineer**
+
 ## 🛠️ Tech Stack
 * **Frontend:** HTML5, CSS3, Vanilla JavaScript.
 * **Backend:** FastAPI (Python) hosted on Railway.
